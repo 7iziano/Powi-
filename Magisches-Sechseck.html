@@ -1,0 +1,438 @@
+
+<meta charset="UTF-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f4f6fa;color:#1a202c;min-height:100vh}
+.hdr{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:1.4rem 2rem;text-align:center}
+.hdr h1{font-size:1.45rem;font-weight:700;margin-bottom:.25rem}
+.hdr p{font-size:.85rem;opacity:.85}
+.tab-nav{display:flex;background:#fff;border-bottom:2px solid #e2e8f0;overflow-x:auto}
+.tb{flex:1;min-width:90px;padding:.85rem .5rem;border:none;background:none;cursor:pointer;font-size:.82rem;font-weight:700;color:#64748b;transition:all .2s;border-bottom:3px solid transparent;white-space:nowrap}
+.tb:hover{color:#1d4ed8;background:#f8fafc}
+.tb.on{color:#1d4ed8;border-bottom-color:#1d4ed8}
+.pane{display:none;padding:1.4rem;max-width:860px;margin:0 auto}
+.pane.on{display:block}
+.card{background:#fff;border-radius:12px;padding:1.4rem;margin-bottom:1rem;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.card h2{font-size:1.05rem;font-weight:700;margin-bottom:.8rem;color:#1e293b}
+.card h3{font-size:.95rem;font-weight:700;margin-bottom:.6rem;color:#1e293b}
+p{line-height:1.65;font-size:.88rem;margin-bottom:.55rem;color:#334155}
+.timeline{display:flex;align-items:stretch;gap:.8rem;margin:.8rem 0;flex-wrap:wrap}
+.tl-item{background:#eff6ff;border-left:4px solid #2563eb;border-radius:0 8px 8px 0;padding:.8rem 1rem;flex:1;min-width:160px;font-size:.85rem}
+.tl-year{font-weight:700;font-size:.95rem;color:#1d4ed8;margin-bottom:.25rem}
+.tl-arr{display:flex;align-items:center;color:#93c5fd;font-size:1.3rem;padding-top:1rem}
+.law{background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:.9rem 1.1rem;margin:.8rem 0;font-size:.85rem;line-height:1.65}
+.hex-wrap{display:flex;flex-direction:column;align-items:center;gap:1.2rem}
+.seg-panel{width:100%;background:#fff;border-radius:12px;padding:1.2rem;box-shadow:0 1px 4px rgba(0,0,0,.07);border-left:5px solid #2563eb;min-height:90px}
+.seg-panel h3{font-size:.95rem;font-weight:700;margin-bottom:.5rem}
+.hex-seg{cursor:pointer}
+.goal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
+.gcard{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07);cursor:pointer;transition:transform .2s,box-shadow .2s}
+.gcard:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.11)}
+.gh{padding:.9rem 1.1rem;color:#fff;display:flex;align-items:flex-start;gap:.7rem}
+.gi{font-size:1.3rem;margin-top:.1rem}
+.gn{font-weight:700;font-size:.9rem;line-height:1.3}
+.gs{font-size:.78rem;opacity:.88;margin-top:.2rem;line-height:1.4}
+.gb{padding:.9rem 1.1rem;font-size:.85rem;line-height:1.65;display:none}
+.gb.on{display:block}
+.stw-badge{border-radius:6px;padding:.3rem .7rem;font-size:.78rem;margin-bottom:.65rem;display:inline-block;font-weight:600}
+.stw-yes{background:#d1fae5;color:#065f46}
+.stw-no{background:#fef3c7;color:#92400e}
+.example{background:#f8fafc;border-radius:6px;padding:.65rem .8rem;font-size:.83rem;margin-top:.5rem;line-height:1.6;color:#475569}
+.gtog{padding:.35rem 1.1rem .75rem;font-size:.78rem;color:#94a3b8;text-align:center;user-select:none}
+.mwrap{overflow-x:auto}
+table.mx{border-collapse:collapse;width:100%;min-width:480px;font-size:.8rem}
+.mx th,.mx td{border:1px solid #e2e8f0;padding:.45rem .4rem;text-align:center;vertical-align:middle}
+.mx th{background:#f8fafc;font-weight:700;font-size:.78rem}
+.mx td.h{background:#d1fae5;cursor:pointer}
+.mx td.k{background:#fee2e2;cursor:pointer}
+.mx td.n{background:#fef9c3;cursor:pointer}
+.mx td.s{background:#f1f5f9;color:#94a3b8}
+.mx td.h:hover,.mx td.k:hover,.mx td.n:hover{filter:brightness(.93)}
+.rel-panel{background:#fff;border-radius:12px;padding:1.3rem;margin-top:.9rem;box-shadow:0 1px 4px rgba(0,0,0,.07);min-height:80px}
+.legend{display:flex;gap:.7rem;flex-wrap:wrap;margin:.6rem 0 1rem}
+.lgd{display:inline-flex;align-items:center;font-size:.8rem;padding:.25rem .65rem;border-radius:20px;font-weight:600}
+.lgd-h{background:#d1fae5;color:#065f46}
+.lgd-k{background:#fee2e2;color:#991b1b}
+.lgd-n{background:#fef9c3;color:#78350f}
+.qblock{background:#fff;border-radius:12px;padding:1.4rem;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.prog{height:6px;background:#e2e8f0;border-radius:3px;margin-bottom:1.1rem}
+.progf{height:100%;background:#2563eb;border-radius:3px;transition:width .3s}
+.qctr{font-size:.78rem;color:#64748b;margin-bottom:.4rem}
+.qt{font-size:.95rem;font-weight:700;line-height:1.5;margin-bottom:1.1rem;color:#1e293b}
+.qopts{display:flex;flex-direction:column;gap:.55rem}
+.qopt{padding:.75rem .95rem;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:.87rem;text-align:left;background:#fff;color:#334155;line-height:1.4;transition:all .15s}
+.qopt:hover:not([disabled]){border-color:#93c5fd;background:#eff6ff}
+.qopt.cor{border-color:#10b981 !important;background:#d1fae5;color:#065f46}
+.qopt.wrg{border-color:#ef4444 !important;background:#fee2e2;color:#7f1d1d}
+.qfb{margin-top:.9rem;padding:.8rem;border-radius:8px;font-size:.85rem;line-height:1.6;display:none}
+.qfb.on{display:block}
+.qfb.cfb{background:#d1fae5;color:#065f46}
+.qfb.wfb{background:#fee2e2;color:#7f1d1d}
+.bnext{margin-top:.9rem;padding:.65rem 1.4rem;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:.88rem;font-weight:700;display:none}
+.bnext:hover{background:#1d4ed8}
+.bnext.on{display:inline-block}
+.qres{background:#fff;border-radius:12px;padding:2rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.07);display:none}
+.qres.on{display:block}
+.sbig{font-size:2.8rem;font-weight:800;color:#2563eb}
+.brst{margin-top:1rem;padding:.65rem 1.4rem;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:.88rem;font-weight:700}
+.brst:hover{background:#1d4ed8}
+</style>
+
+<div class="hdr">
+  <h1>Das magische Sechseck</h1>
+  <p>Wirtschaftspolitik &middot; Jahrgangsstufe 12 &middot; Politik &amp; Wirtschaft (Hessen)</p>
+</div>
+
+<nav class="tab-nav">
+  <button class="tb on" data-tab="0">Einf&uuml;hrung</button>
+  <button class="tb" data-tab="1">Die 6 Ziele</button>
+  <button class="tb" data-tab="2">Zielbeziehungen</button>
+  <button class="tb" data-tab="3">Quiz</button>
+</nav>
+
+<main>
+<section class="pane on" id="p0">
+  <div class="card">
+    <h2>Was ist das magische Sechseck?</h2>
+    <p>Das <strong>magische Sechseck</strong> beschreibt die sechs zentralen Ziele der deutschen Wirtschaftspolitik. Es hei&szlig;t <em>magisch</em>, weil sich diese Ziele <strong>nie alle gleichzeitig vollst&auml;ndig verwirklichen lassen</strong> &ndash; zwischen ihnen bestehen unverm&shy;eidliche Zielkonflikte.</p>
+    <p>Die Wirtschaftspolitik muss deshalb st&auml;ndig abw&auml;gen: Welchem Ziel r&auml;ume ich gerade Priorit&auml;t ein &ndash; und welche anderen Ziele nehme ich daf&uuml;r zur&uuml;ck?</p>
+  </div>
+  <div class="card">
+    <h3>Rechtliche Grundlage: Das Stabilit&auml;tsgesetz (1967)</h3>
+    <div class="law">Das <strong>Stabilit&auml;ts- und Wachstumsgesetz (StWG)</strong> vom 8. Juni 1967 verpflichtet Bund und L&auml;nder, ihre Haushaltspolitik am <em>gesamtwirtschaftlichen Gleichgewicht</em> auszurichten. Es legte das <strong>&bdquo;Magische Viereck&ldquo;</strong> fest &ndash; vier wirtschaftspolitische Kernziele.</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-year">1967</div>StWG in Kraft<br><strong>Magisches Viereck</strong><br>4 Ziele gesetzlich verankert</div>
+      <div class="tl-arr">&rarr;</div>
+      <div class="tl-item"><div class="tl-year">Erweiterung</div>+ Gerechte Verteilung<br>+ Umweltschutz<br><strong>Magisches Sechseck</strong></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Klick auf ein Segment &ndash; lerne das jeweilige Ziel kennen!</h3>
+    <div class="hex-wrap">
+      <svg id="hexsvg" viewBox="0 0 400 400" width="300" height="300" xmlns="http://www.w3.org/2000/svg">
+        <polygon class="hex-seg" id="sg0" points="200,200 200,40 339,120" fill="#3B82F6" stroke="#fff" stroke-width="3" opacity=".82"/>
+        <polygon class="hex-seg" id="sg1" points="200,200 339,120 339,280" fill="#10B981" stroke="#fff" stroke-width="3" opacity=".82"/>
+        <polygon class="hex-seg" id="sg2" points="200,200 339,280 200,360" fill="#F59E0B" stroke="#fff" stroke-width="3" opacity=".82"/>
+        <polygon class="hex-seg" id="sg3" points="200,200 200,360 61,280"  fill="#8B5CF6" stroke="#fff" stroke-width="3" opacity=".82"/>
+        <polygon class="hex-seg" id="sg4" points="200,200 61,280 61,120"   fill="#EF4444" stroke="#fff" stroke-width="3" opacity=".82"/>
+        <polygon class="hex-seg" id="sg5" points="200,200 61,120 200,40"   fill="#14B8A6" stroke="#fff" stroke-width="3" opacity=".82"/>
+        <circle cx="200" cy="200" r="44" fill="#fff" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="200" y="196" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1e293b">Magisches</text>
+        <text x="200" y="210" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1e293b">Sechseck</text>
+        <text x="247" y="114" text-anchor="middle" font-size="9" fill="#fff" font-weight="700" pointer-events="none">Preisniveau-</text>
+        <text x="247" y="126" text-anchor="middle" font-size="9" fill="#fff" font-weight="700" pointer-events="none">stabilit&auml;t</text>
+        <text x="292" y="196" text-anchor="middle" font-size="9" fill="#fff" font-weight="700" pointer-events="none">Besch&auml;f-</text>
+        <text x="292" y="208" text-anchor="middle" font-size="9" fill="#fff" font-weight="700" pointer-events="none">tigung</text>
+        <text x="247" y="282" text-anchor="middle" font-size="9" fill="#fff" font-weight="700" pointer-events="none">Au&szlig;en-</text>
+        <text x="247" y="294" text-anchor="middle" font-size="9" fill="#fff" font-weight="700" pointer-events="none">wirtschaft</text>
+        <text x="153" y="282" text-anchor="middle" font-size="9" fill="#fff" font-weight="700" pointer-events="none">Wirt.-</text>
+        <text x="153" y="294" text-anchor="middle" font-size="9" fill="#fff" font-weight="700" pointer-events="none">wachstum</text>
+        <text x="108" y="196" text-anchor="middle" font-size="9" fill="#fff" font-weight="700" pointer-events="none">Gerechte</text>
+        <text x="108" y="208" text-anchor="middle" font-size="9" fill="#fff" font-weight="700" pointer-events="none">Verteilung</text>
+        <text x="153" y="114" text-anchor="middle" font-size="9" fill="#fff" font-weight="700" pointer-events="none">Umwelt-</text>
+        <text x="153" y="126" text-anchor="middle" font-size="9" fill="#fff" font-weight="700" pointer-events="none">schutz</text>
+      </svg>
+      <div class="seg-panel" id="seg-panel">
+        <p style="color:#94a3b8;font-style:italic">Klicke auf einen Bereich des Sechsecks, um mehr &uuml;ber das jeweilige Ziel zu erfahren.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pane" id="p1">
+  <div class="card"><h2>Die 6 Ziele im Detail</h2><p>Klicke auf eine Karte, um die ausf&uuml;hrliche Erkl&auml;rung zu &ouml;ffnen oder zu schlie&szlig;en.</p></div>
+  <div class="goal-grid" id="ggrid"></div>
+</section>
+
+<section class="pane" id="p2">
+  <div class="card">
+    <h2>Zielbeziehungen</h2>
+    <p>Klicke auf eine Zelle, um die Beziehung zwischen zwei Zielen erkl&auml;rt zu bekommen.</p>
+    <div class="legend">
+      <span class="lgd lgd-h">&#10003; Zielharmonie</span>&nbsp;
+      <span class="lgd lgd-k">&#9888; Zielkonflikt</span>&nbsp;
+      <span class="lgd lgd-n">&#8722; Zielneutralit&auml;t</span>
+    </div>
+  </div>
+  <div class="card"><div class="mwrap"><table class="mx" id="mxtbl"></table></div></div>
+  <div class="rel-panel" id="rel-panel"><p style="color:#94a3b8;font-style:italic">Klicke auf eine Zelle in der Tabelle.</p></div>
+</section>
+
+<section class="pane" id="p3">
+  <div class="card"><h2>Quiz &ndash; teste dein Wissen</h2><p>8 Fragen zum magischen Sechseck. Nach jeder Antwort bekommst du eine Erkl&auml;rung.</p></div>
+  <div class="prog"><div class="progf" id="pgf" style="width:0%"></div></div>
+  <div class="qblock" id="qblk">
+    <div class="qctr" id="qctr"></div>
+    <div class="qt" id="qt"></div>
+    <div class="qopts" id="qopts"></div>
+    <div class="qfb" id="qfb"></div>
+    <button class="bnext" id="bnext">N&auml;chste Frage &rarr;</button>
+  </div>
+  <div class="qres" id="qres">
+    <div id="qemoji" style="font-size:2.2rem;margin-bottom:.4rem"></div>
+    <div class="sbig" id="qscore"></div>
+    <p id="qmsg" style="margin:.8rem 0 1.4rem;color:#64748b;font-size:.9rem"></p>
+    <button class="brst" id="brst">Nochmal versuchen</button>
+  </div>
+</section>
+</main>
+
+<script>
+var segInfos = [
+  {title:"Preisniveaustabiit\u00e4t",color:"#3B82F6",text:"Stabile Preise sch\u00fctzen die Kaufkraft. Gemessen wird die Inflationsrate \u2013 Ziel: ca. 2 % Inflation. Zust\u00e4ndig ist vor allem die <strong>Europ\u00e4ische Zentralbank (EZB)</strong>. Eines der vier urspr\u00fcnglichen StWG-Ziele (1967)."},
+  {title:"Hoher Besch\u00e4ftigungsstand",color:"#10B981",text:"Vollbesch\u00e4ftigung als Ideal: Alle arbeitswilligen Personen sollen eine Stelle finden. Gemessen an der <strong>Arbeitslosenquote</strong> \u2013 Vollbesch\u00e4ftigung gilt bei unter 3\u00a0%. Eines der vier StWG-Ziele."},
+  {title:"Au\u00dfenwirtschaftliches Gleichgewicht",color:"#F59E0B",text:"Exporte und Importe sollen langfristig ausgeglichen sein. Deutschland hat seit Jahren hohe <strong>Export\u00fcbersch\u00fcsse</strong> \u2013 politisch umstritten. Messgr\u00f6\u00dfe: Leistungsbilanzsaldo. Eines der vier StWG-Ziele."},
+  {title:"Stetiges Wirtschaftswachstum",color:"#8B5CF6",text:"Das <strong>BIP</strong> soll stetig und angemessen wachsen (ca. 2\u20133\u00a0% p.a.). Wachstum schafft Besch\u00e4ftigung und Steuereinnahmen. \u201eStetig\u201c bedeutet: keine Blasen, keine Rezessionen. Eines der vier StWG-Ziele."},
+  {title:"Gerechte Einkommens- und Verm\u00f6gensverteilung",color:"#EF4444",text:"Einkommen und Verm\u00f6gen sollen fair verteilt sein. Instrumente: Steuerpolitik, Sozialleistungen, Mindestlohn. Gemessen am <strong>Gini-Koeffizienten</strong>. Nicht im StWG \u2013 Erweiterung zum Sechseck."},
+  {title:"Umweltschutz &amp; Nachhaltigkeit",color:"#14B8A6",text:"Wirtschaften soll nat\u00fcrliche Lebensgrundlagen erhalten. Instrumente: CO\u2082-Steuer, Emissionshandel, Energiewende. Nicht im StWG \u2013 moderne Erg\u00e4nzung im Kontext von Klimawandel und Ressourcenknappheit."}
+];
+
+var goals = [
+  {name:"Preisniveaustabiit\u00e4t",color:"#3B82F6",short:"Stabile Preise \u2013 keine zu hohe Inflation, keine Deflation",ind:"Inflationsrate (angestrebt: ca. 2\u00a0%)",stw:true,
+   detail:"Ziel ist es, das allgemeine Preisniveau stabil zu halten. Eine <b>Inflation</b> \u00fcber 2\u00a0% schadet Sparern und senkt die Kaufkraft. <b>Deflation</b> (fallende Preise) ist ebenfalls gef\u00e4hrlich: Verbraucher schieben K\u00e4ufe auf, die Wirtschaft ger\u00e4t in eine Abw\u00e4rtsspirale.<br><br><b>Zust\u00e4ndig:</b> Die Europ\u00e4ische Zentralbank (EZB) steuert \u00fcber Zinspolitik die Geldmenge.<br><b>Messgr\u00f6\u00dfe:</b> Verbraucherpreisindex (VPI).",
+   ex:"Beispiel: Wenn Energie und Lebensmittel stark teurer werden (wie 2021\u20132023), steigt die Inflationsrate \u2013 das Ziel Preisniveaustabiit\u00e4t ist dann in Gefahr."},
+  {name:"Hoher Besch\u00e4ftigungsstand",color:"#10B981",short:"M\u00f6glichst wenig Arbeitslosigkeit \u2013 Vollbesch\u00e4ftigung als Ideal",ind:"Arbeitslosenquote (Vollbesch\u00e4ftigung: unter 3\u00a0%)",stw:true,
+   detail:"Vollbesch\u00e4ftigung bedeutet: Alle arbeitswilligen Menschen finden einen Arbeitsplatz. Hohe Arbeitslosigkeit belastet die <b>Staatsfinanzen</b> (mehr Sozialausgaben, weniger Steuereinnahmen) und verursacht soziales Leid.<br><br><b>Zust\u00e4ndig:</b> Bundesregierung (Fiskalpolitik), Bundesagentur f\u00fcr Arbeit.<br><b>Messgr\u00f6\u00dfe:</b> Arbeitslosenquote.",
+   ex:"Beispiel: Das Kurzarbeitergeld in der Corona-Krise (2020) verhinderte Massenentlassungen und sch\u00fctzte so das Ziel der Vollbesch\u00e4ftigung."},
+  {name:"Au\u00dfenwirtschaftliches Gleichgewicht",color:"#F59E0B",short:"Ausgeglichene Handels- und Leistungsbilanz im Au\u00dfenhandel",ind:"Leistungsbilanzsaldo (angestrebt: ausgeglichen)",stw:true,
+   detail:"Deutschland strebt eine <b>ausgeglichene Zahlungsbilanz</b> an. Ein dauerhaft hoher Export\u00fcberschuss kann zu Spannungen mit Handelspartnern f\u00fchren. Ein Import\u00fcberschuss gef\u00e4hrdet Arbeitspl\u00e4tze.<br><br><b>Zust\u00e4ndig:</b> Bundesregierung, Europ\u00e4ische Union.<br><b>Messgr\u00f6\u00dfe:</b> Leistungsbilanzsaldo.",
+   ex:"Beispiel: Deutschlands Export\u00fcbersch\u00fcsse gegen\u00fcber den USA f\u00fchrten wiederholt zu Handelsstreitigkeiten \u2013 zuletzt unter dem Stichwort Strafz\u00f6lle."},
+  {name:"Stetiges Wirtschaftswachstum",color:"#8B5CF6",short:"Kontinuierliches, stabiles Wachstum des Bruttoinlandsprodukts",ind:"BIP-Wachstumsrate (angestrebt: 2\u20133\u00a0% pro Jahr)",stw:true,
+   detail:"<b>Wirtschaftswachstum</b> bedeutet: Die gesamte wirtschaftliche Leistung (BIP) nimmt zu. Das schafft Arbeitspl\u00e4tze, h\u00f6here L\u00f6hne und Steuereinnahmen. \u201eStetig\u201c hei\u00dft: kein explosives Wachstum, das Inflation erzeugt, aber auch keine Rezession.<br><br><b>Zust\u00e4ndig:</b> Bundesregierung.<br><b>Messgr\u00f6\u00dfe:</b> Reales BIP-Wachstum (inflationsbereinigt).",
+   ex:"Beispiel: In der Finanzkrise 2009 schrumpfte das deutsche BIP um 5,7\u00a0% \u2013 die st\u00e4rkste Rezession der Nachkriegszeit."},
+  {name:"Gerechte Einkommensverteilung",color:"#EF4444",short:"Faire Verteilung von Einkommen und Verm\u00f6gen in der Gesellschaft",ind:"Gini-Koeffizient, S80/S20-Verh\u00e4ltnis",stw:false,
+   detail:"Eine <b>gerechte Verteilung</b> verhindert, dass Wohlstand nur bei wenigen konzentriert ist. Starke Ungleichheit gef\u00e4hrdet sozialen Zusammenhalt. Nicht im StWG verankert, aber Teil des erweiterten Sechsecks.<br><br><b>Instrumente:</b> Progressives Steuersystem, Sozialleistungen, Mindestlohn.<br><b>Messgr\u00f6\u00dfe:</b> Gini-Koeffizient (0\u00a0= gleich, 1\u00a0= maximal ungleich).",
+   ex:"Beispiel: Die reichsten 10\u00a0% der Haushalte in Deutschland besitzen laut Studien \u00fcber 60\u00a0% des Gesamtverm\u00f6gens."},
+  {name:"Umweltschutz & Nachhaltigkeit",color:"#14B8A6",short:"Schutz nat\u00fcrlicher Ressourcen f\u00fcr heutige und k\u00fcnftige Generationen",ind:"CO\u2082-Emissionen, \u00f6kologischer Fu\u00dfabdruck",stw:false,
+   detail:"<b>Nachhaltigkeit</b> bedeutet: wirtschaftliches Handeln so gestalten, dass nat\u00fcrliche Lebensgrundlagen erhalten bleiben. Ebenfalls nicht im urspr\u00fcnglichen StWG.<br><br><b>Instrumente:</b> CO\u2082-Steuer, Emissionshandel (EU-ETS), Erneuerbare-Energien-Gesetz (EEG).<br><b>Messgr\u00f6\u00dfe:</b> CO\u2082-Emissionen, SDG-Indikatoren.",
+   ex:"Beispiel: Die deutsche Energiewende dient dem Umweltschutz, kann aber kurzfristig die Energiepreise erh\u00f6hen \u2013 ein Konflikt mit dem Ziel Preisniveaustabiit\u00e4t."}
+];
+
+var rm = [[0,2,1,2,2,3],[2,0,2,1,1,2],[1,2,0,2,3,2],[2,1,2,0,2,2],[2,1,3,2,0,1],[3,2,2,2,1,0]];
+
+var relEx = {
+  "0-1":{t:2,txt:"<b>Zielkonflikt (Phillipskurve):</b> Je niedriger die Arbeitslosigkeit, desto st\u00e4rker steigen tendenziell L\u00f6hne und Preise \u2192 Inflation. Umgekehrt: Hohe Zinsen zur Inflationsbek\u00e4mpfung k\u00f6nnen Investitionen drosseln und Arbeitspl\u00e4tze kosten."},
+  "0-2":{t:1,txt:"<b>Zielharmonie:</b> Stabile Preise st\u00e4rken die Wettbewerbsf\u00e4higkeit deutscher Exporte, da keine inflationsbedingte Verteuerung stattfindet. Preisstabilit\u00e4t und au\u00dfenwirtschaftliches Gleichgewicht beg\u00fcnstigen sich wechselseitig."},
+  "0-3":{t:2,txt:"<b>Zielkonflikt:</b> Starkes Wirtschaftswachstum erh\u00f6ht die Nachfrage und kann Inflation ausl\u00f6sen (Nachfragesog-Inflation). Umgekehrt k\u00f6nnen hohe Zinsen zur Inflationsbremse das Wirtschaftswachstum d\u00e4mpfen."},
+  "0-4":{t:2,txt:"<b>Zielkonflikt:</b> Inflation trifft einkommensschwache Haushalte st\u00e4rker, da diese einen h\u00f6heren Anteil ihres Einkommens f\u00fcr Grundg\u00fcter ausgeben. Preissteigerungen k\u00f6nnen bestehende Ungleichheiten versch\u00e4rfen."},
+  "0-5":{t:3,txt:"<b>Zielneutralit\u00e4t:</b> Zwischen Preisniveaustabiit\u00e4t und Umweltschutz besteht kein zwingender direkter Zusammenhang. Eine CO\u2082-Steuer kann kurzfristig Preise erh\u00f6hen \u2013 das ist ein m\u00f6glicher indirekter Konflikt."},
+  "1-2":{t:2,txt:"<b>Zielkonflikt:</b> Hohe Besch\u00e4ftigung und Binnennachfrage k\u00f6nnen die Importe steigern und das au\u00dfenwirtschaftliche Gleichgewicht belasten."},
+  "1-3":{t:1,txt:"<b>Zielharmonie:</b> Wirtschaftswachstum schafft Arbeitspl\u00e4tze \u2013 mehr Produktion braucht mehr Arbeitskr\u00e4fte. Beide Ziele verst\u00e4rken sich: Wachstum \u2192 Besch\u00e4ftigung, Besch\u00e4ftigung \u2192 Konsum \u2192 Wachstum."},
+  "1-4":{t:1,txt:"<b>Zielharmonie:</b> Hohe Besch\u00e4ftigung sorgt f\u00fcr Einkommenszuw\u00e4chse und kann Ungleichheiten mildern. Vollbesch\u00e4ftigung st\u00e4rkt die Verhandlungsmacht von Arbeitnehmerinnen und Arbeitnehmern."},
+  "1-5":{t:2,txt:"<b>Zielkonflikt:</b> Mehr Besch\u00e4ftigung bedeutet in der Regel mehr Produktion und Konsum \u2013 beides belastet die Umwelt. Eine rein quantitative Besch\u00e4ftigungspolitik widerspricht dem Umweltschutzziel."},
+  "2-3":{t:2,txt:"<b>Zielkonflikt:</b> Starkes Wirtschaftswachstum erh\u00f6ht die Importnachfrage und kann das au\u00dfenwirtschaftliche Gleichgewicht st\u00f6ren."},
+  "2-4":{t:3,txt:"<b>Zielneutralit\u00e4t:</b> Zwischen Au\u00dfenhandelsgleichgewicht und gerechter Einkommensverteilung besteht kein direkter Zusammenhang. Handelsgewinne k\u00f6nnen ungleich verteilt sein \u2013 das ist jedoch eine Frage der Steuerpolitik."},
+  "2-5":{t:2,txt:"<b>Zielkonflikt:</b> Exportorientiertes Wirtschaften erfordert hohe Produktion und kann Umweltkosten externalisieren. Strenge Umweltauflagen k\u00f6nnen die internationale Wettbewerbsf\u00e4higkeit schw\u00e4chen."},
+  "3-4":{t:2,txt:"<b>Zielkonflikt:</b> Wirtschaftswachstum f\u00fchrt nicht automatisch zu gerechter Verteilung. Wachstumsgewinne konzentrieren sich oft bei Kapitalbesitzenden (Kritik am sog. \u201eTrickle-down\u201c)."},
+  "3-5":{t:2,txt:"<b>Zielkonflikt:</b> Mehr Produktion bedeutet mehr Ressourcenverbrauch und mehr CO\u2082-Emissionen \u2013 der klassische Konflikt zwischen quantitativem Wirtschaftswachstum und \u00f6kologischer Nachhaltigkeit."},
+  "4-5":{t:1,txt:"<b>Zielharmonie:</b> Umweltschutz ist auch soziale Gerechtigkeit: \u00c4rmere Bev\u00f6lkerungsschichten leiden \u00fcberproportional unter Umweltsch\u00e4den. Eine nachhaltige Wirtschaft kann beiden Zielen dienen."}
+};
+
+var snames = ["Preise","Besch\u00e4ft.","Au\u00dfenw.","Wachstum","Verteilg.","Umwelt"];
+
+var qdata = [
+  {q:"Welches Gesetz bildet die rechtliche Grundlage des \u201emagischen Vierecks\u201c in Deutschland?",
+   o:["Das Grundgesetz (GG)","Das Stabilit\u00e4ts- und Wachstumsgesetz (StWG)","Das Sozialgesetzbuch (SGB)","Das Bundeswirtschaftsf\u00f6rderungsgesetz"],c:1,
+   fb:"Das <b>Stabilit\u00e4ts- und Wachstumsgesetz (StWG) von 1967</b> verpflichtet Bund und L\u00e4nder zur Ausrichtung ihrer Haushaltspolitik am gesamtwirtschaftlichen Gleichgewicht und benennt die vier Ziele des magischen Vierecks."},
+  {q:"Wie viele Ziele umfasst das \u201emagische Viereck\u201c laut StWG (1967)?",
+   o:["3 Ziele","4 Ziele","5 Ziele","6 Ziele"],c:1,
+   fb:"Das StWG von 1967 benennt <b>vier</b> Ziele: Preisniveaustabiit\u00e4t, hoher Besch\u00e4ftigungsstand, au\u00dfenwirtschaftliches Gleichgewicht und stetiges Wirtschaftswachstum. Erst sp\u00e4ter wurden zwei weitere Ziele erg\u00e4nzt."},
+  {q:"Welche zwei Ziele wurden beim \u00dcbergang vom \u201emagischen Viereck\u201c zum \u201emagischen Sechseck\u201c erg\u00e4nzt?",
+   o:["Vollbesch\u00e4ftigung und Au\u00dfenhandel","Gerechte Einkommensverteilung und Umweltschutz","Digitalisierung und Innovation","W\u00e4hrungsstabiit\u00e4t und Zinspolitik"],c:1,
+   fb:"<b>Gerechte Einkommens- und Verm\u00f6gensverteilung</b> sowie <b>Umweltschutz/Nachhaltigkeit</b> wurden erg\u00e4nzt. Beide sind nicht im StWG verankert, aber Teil der wirtschaftspolitischen Debatte."},
+  {q:"Warum hei\u00dft das Sechseck \u201emagisch\u201c?",
+   o:["Weil die Ziele geheim vereinbart wurden","Weil alle sechs Ziele stets gleichzeitig erreichbar sind","Weil sich die Ziele nie alle gleichzeitig vollst\u00e4ndig verwirklichen lassen","Weil das Sechseck eine besondere mathematische Bedeutung hat"],c:2,
+   fb:"Das Adjektiv <b>\u201emagisch\u201c</b> dr\u00fcckt aus, dass die gleichzeitige vollst\u00e4ndige Erf\u00fcllung aller Ziele unm\u00f6glich ist. Es gibt unvermeidliche Zielkonflikte \u2013 die Wirtschaftspolitik muss st\u00e4ndig abw\u00e4gen."},
+  {q:"Die Phillipskurve beschreibt einen typischen Zielkonflikt zwischen:",
+   o:["Wirtschaftswachstum und Au\u00dfenhandel","Preisniveaustabiit\u00e4t und Besch\u00e4ftigung","Umweltschutz und gerechter Verteilung","Wachstum und Verteilung"],c:1,
+   fb:"Die <b>Phillipskurve</b> zeigt: Je niedriger die Arbeitslosigkeit, desto h\u00f6her tendiert die Inflation \u2013 weil steigende L\u00f6hne die Produktionskosten erh\u00f6hen. Dieser Konflikt zwischen <b>Preisstabilit\u00e4t und Vollbesch\u00e4ftigung</b> ist ein Kernproblem der Wirtschaftspolitik."},
+  {q:"Welche Institution ist im Euroraum prim\u00e4r f\u00fcr Preisniveaustabiit\u00e4t zust\u00e4ndig?",
+   o:["Die Bundesregierung","Der Bundestag","Die Europ\u00e4ische Zentralbank (EZB)","Das Bundeswirtschaftsministerium"],c:2,
+   fb:"Die <b>Europ\u00e4ische Zentralbank (EZB)</b> ist das wichtigste Instrument der Geldpolitik im Euroraum. Ihr prim\u00e4res Ziel laut EU-Vertrag ist die <b>Preisstabilit\u00e4t</b> (Inflationsziel: ca. 2\u00a0%)."},
+  {q:"Welche Zielbeziehung besteht typischerweise zwischen Wirtschaftswachstum und Umweltschutz?",
+   o:["Zielharmonie","Zielneutralit\u00e4t","Zielkonflikt","Zielidentit\u00e4t"],c:2,
+   fb:"Zwischen <b>Wirtschaftswachstum und Umweltschutz</b> besteht ein klassischer <b>Zielkonflikt</b>: Mehr Produktion bedeutet mehr Ressourcenverbrauch und CO\u2082-Emissionen. Eine vollst\u00e4ndige Entkopplung ist bisher nur begrenzt gelungen."},
+  {q:"Welcher Indikator misst \u00fcblicherweise die Einkommens- und Verm\u00f6gensungleichheit?",
+   o:["Der Verbraucherpreisindex (VPI)","Das Bruttoinlandsprodukt (BIP)","Der Gini-Koeffizient","Der Leistungsbilanzsaldo"],c:2,
+   fb:"Der <b>Gini-Koeffizient</b> misst die Ungleichverteilung von Einkommen oder Verm\u00f6gen. Er liegt zwischen 0 (vollst\u00e4ndige Gleichheit) und 1 (maximale Ungleichheit). F\u00fcr Deutschland liegt er beim Einkommen bei ca. 0,32."}
+];
+
+var cQ = 0, sc = 0, answered = false;
+
+function switchPane(i) {
+  document.querySelectorAll('.pane').forEach(function(p, j) { p.classList.toggle('on', j === i); });
+  document.querySelectorAll('.tb').forEach(function(b, j) { b.classList.toggle('on', j === i); });
+}
+
+function showSeg(i) {
+  var info = segInfos[i];
+  var panel = document.getElementById('seg-panel');
+  panel.style.borderLeftColor = info.color;
+  panel.innerHTML = '<h3 style="color:' + info.color + ';margin-bottom:.45rem">' + info.title + '</h3><p>' + info.text + '</p>';
+  for (var j = 0; j < 6; j++) {
+    document.getElementById('sg' + j).setAttribute('opacity', j === i ? '1' : '0.55');
+  }
+}
+
+function buildGoals() {
+  var c = document.getElementById('ggrid');
+  var html = '';
+  for (var i = 0; i < goals.length; i++) {
+    var g = goals[i];
+    html += '<div class="gcard" data-idx="' + i + '">'
+      + '<div class="gh" style="background:' + g.color + '"><div><div class="gn">' + g.name + '</div><div class="gs">' + g.short + '</div></div></div>'
+      + '<div class="gb" id="gb' + i + '">'
+      + '<span class="stw-badge ' + (g.stw ? 'stw-yes">&#10003; Im StWG 1967 verankert' : 'stw-no">&#9889; Erweiterung \u2013 nicht im StWG') + '</span>'
+      + '<p><strong>Indikator:</strong> ' + g.ind + '</p>'
+      + '<p>' + g.detail + '</p>'
+      + '<div class="example">' + g.ex + '</div>'
+      + '</div>'
+      + '<div class="gtog" id="gt' + i + '">\u25bc Details anzeigen</div>'
+      + '</div>';
+  }
+  c.innerHTML = html;
+}
+
+function togGoal(i) {
+  var b = document.getElementById('gb' + i);
+  var t = document.getElementById('gt' + i);
+  var open = b.classList.toggle('on');
+  t.textContent = open ? '\u25b2 Schlie\u00dfen' : '\u25bc Details anzeigen';
+}
+
+function buildMx() {
+  var tb = document.getElementById('mxtbl');
+  var h = '<tr><th></th>';
+  for (var n = 0; n < snames.length; n++) h += '<th>' + snames[n] + '</th>';
+  h += '</tr>';
+  for (var r = 0; r < 6; r++) {
+    h += '<tr><th>' + snames[r] + '</th>';
+    for (var c = 0; c < 6; c++) {
+      var v = rm[r][c];
+      if (v === 0) {
+        h += '<td class="s">\u2014</td>';
+      } else {
+        var cl = v === 1 ? 'h' : v === 2 ? 'k' : 'n';
+        var sym = v === 1 ? '\u2705' : v === 2 ? '\u26a0\ufe0f' : '\u2796';
+        h += '<td class="' + cl + '" data-r="' + r + '" data-c="' + c + '">' + sym + '</td>';
+      }
+    }
+    h += '</tr>';
+  }
+  tb.innerHTML = h;
+}
+
+function showRel(r, c) {
+  var key = r < c ? r + '-' + c : c + '-' + r;
+  var rel = relEx[key];
+  if (!rel) return;
+  var bg = rel.t === 1 ? '#d1fae5' : rel.t === 2 ? '#fee2e2' : '#fef9c3';
+  var col = rel.t === 1 ? '#065f46' : rel.t === 2 ? '#991b1b' : '#78350f';
+  document.getElementById('rel-panel').innerHTML =
+    '<p style="font-weight:700;font-size:.9rem;margin-bottom:.7rem">'
+    + goals[r].name + ' &harr; ' + goals[c].name + '</p>'
+    + '<div style="background:' + bg + ';color:' + col + ';border-radius:8px;padding:.8rem;font-size:.87rem;line-height:1.65">'
+    + rel.txt + '</div>';
+}
+
+function startQ() {
+  cQ = 0; sc = 0; answered = false;
+  document.getElementById('qres').classList.remove('on');
+  document.getElementById('qblk').style.display = 'block';
+  renderQ();
+}
+
+function renderQ() {
+  var q = qdata[cQ];
+  document.getElementById('pgf').style.width = Math.round((cQ / qdata.length) * 100) + '%';
+  document.getElementById('qctr').textContent = 'Frage ' + (cQ + 1) + ' von ' + qdata.length;
+  document.getElementById('qt').textContent = q.q;
+  var html = '';
+  for (var i = 0; i < q.o.length; i++) {
+    html += '<button class="qopt" data-idx="' + i + '">' + String.fromCharCode(65 + i) + ') ' + q.o[i] + '</button>';
+  }
+  document.getElementById('qopts').innerHTML = html;
+  document.querySelectorAll('.qopt').forEach(function(btn) {
+    btn.addEventListener('click', function() { pick(parseInt(btn.getAttribute('data-idx'))); });
+  });
+  var fb = document.getElementById('qfb');
+  fb.className = 'qfb'; fb.innerHTML = '';
+  var bn = document.getElementById('bnext');
+  bn.className = 'bnext';
+  bn.textContent = cQ < qdata.length - 1 ? 'N\u00e4chste Frage \u2192' : 'Ergebnis anzeigen \u2192';
+  answered = false;
+}
+
+function pick(i) {
+  if (answered) return;
+  answered = true;
+  var q = qdata[cQ];
+  document.querySelectorAll('.qopt').forEach(function(o) { o.disabled = true; });
+  document.querySelectorAll('.qopt')[q.c].classList.add('cor');
+  var fb = document.getElementById('qfb');
+  if (i === q.c) {
+    sc++;
+    fb.className = 'qfb cfb on';
+    fb.innerHTML = '\u2705 <strong>Richtig!</strong> ' + q.fb;
+  } else {
+    document.querySelectorAll('.qopt')[i].classList.add('wrg');
+    fb.className = 'qfb wfb on';
+    fb.innerHTML = '\u274c <strong>Leider falsch.</strong> ' + q.fb;
+  }
+  document.getElementById('bnext').classList.add('on');
+}
+
+function nxtQ() {
+  cQ++;
+  if (cQ >= qdata.length) showRes();
+  else renderQ();
+}
+
+function showRes() {
+  document.getElementById('qblk').style.display = 'none';
+  document.getElementById('pgf').style.width = '100%';
+  var res = document.getElementById('qres');
+  res.classList.add('on');
+  var pct = Math.round((sc / qdata.length) * 100);
+  document.getElementById('qscore').textContent = sc + ' / ' + qdata.length;
+  var em, msg;
+  if (pct >= 88) { em = '\ud83c\udfc6'; msg = 'Ausgezeichnet! Du hast das magische Sechseck bestens verstanden.'; }
+  else if (pct >= 63) { em = '\ud83d\udc4d'; msg = 'Gut gemacht! Lies noch ein paar Details nach \u2013 dann bist du bestens vorbereitet.'; }
+  else { em = '\ud83d\udcda'; msg = 'Nicht schlecht f\u00fcr den Anfang! Schau dir die Ziele und Zielbeziehungen nochmal in Ruhe an.'; }
+  document.getElementById('qemoji').textContent = em;
+  document.getElementById('qmsg').textContent = msg;
+}
+
+buildGoals();
+buildMx();
+startQ();
+
+document.querySelectorAll('.tb').forEach(function(btn) {
+  btn.addEventListener('click', function() { switchPane(parseInt(btn.getAttribute('data-tab'))); });
+});
+
+for (var si = 0; si < 6; si++) {
+  (function(idx) {
+    var el = document.getElementById('sg' + idx);
+    if (!el) return;
+    el.addEventListener('click', function() { showSeg(idx); });
+    el.addEventListener('mouseenter', function() { el.setAttribute('opacity','1'); });
+    el.addEventListener('mouseleave', function() { el.setAttribute('opacity','.82'); });
+  })(si);
+}
+
+document.getElementById('bnext').addEventListener('click', nxtQ);
+document.getElementById('brst').addEventListener('click', startQ);
+
+document.getElementById('mxtbl').addEventListener('click', function(e) {
+  var td = e.target.closest ? e.target.closest('td[data-r]') : null;
+  if (!td) return;
+  showRel(parseInt(td.getAttribute('data-r')), parseInt(td.getAttribute('data-c')));
+});
+
+document.getElementById('ggrid').addEventListener('click', function(e) {
+  var card = e.target.closest ? e.target.closest('.gcard') : null;
+  if (!card) return;
+  togGoal(parseInt(card.getAttribute('data-idx')));
+});
+</script>
